@@ -1,0 +1,681 @@
+openapi: 3.0.3
+info:
+  title: Shop E-Commerce RESTful API (API-First Contract)
+  description: Dac ta OpenAPI 3.0.3 cho he thong Shop E-Commerce chuan doanh nghiep.
+  version: 2.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Spring Boot Development Server
+
+paths:
+  /customers:
+    get:
+      summary: Lay danh sach khach hang
+      operationId: getCustomers
+      tags:
+        - Customers
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/CustomerPageResponse'
+
+    post:
+      summary: Dang ky khach hang moi
+      operationId: createCustomer
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              : '#/components/schemas/CustomerCreateRequest'
+      responses:
+        '201':
+          description: Tao khach hang thanh cong
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/CustomerResponse'
+
+  /customers/{id}:
+    get:
+      summary: Lay chi tiet khach hang
+      operationId: getCustomerById
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/CustomerResponse'
+
+    put:
+      summary: Cap nhat khach hang
+      operationId: updateCustomer
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              : '#/components/schemas/CustomerUpdateRequest'
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/CustomerResponse'
+
+  /customers/{id}/orders:
+    get:
+      summary: Lich su don hang cua khach hang
+      operationId: getCustomerOrders
+      tags:
+        - Customers
+        - Orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/OrderListResponse'
+
+  /categories:
+    get:
+      summary: Danh sach danh muc san pham
+      operationId: getCategories
+      tags:
+        - Categories
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  : '#/components/schemas/CategoryResponse'
+
+    post:
+      summary: Tao danh muc moi
+      operationId: createCategory
+      tags:
+        - Categories
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              : '#/components/schemas/CategoryCreateRequest'
+      responses:
+        '201':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/CategoryResponse'
+
+  /products:
+    get:
+      summary: Truyn van san pham (Loc theo danh muc, gia, tu khoa, phan trang)
+      operationId: getProducts
+      tags:
+        - Products
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: categoryId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/ProductPageResponse'
+
+    post:
+      summary: Them san pham moi
+      operationId: createProduct
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              : '#/components/schemas/ProductCreateRequest'
+      responses:
+        '201':
+          description: Tao san pham thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/ProductResponse'
+
+  /products/{id}:
+    get:
+      summary: Chi tiet san pham
+      operationId: getProductById
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/ProductResponse'
+
+    put:
+      summary: Cap nhat san pham
+      operationId: updateProduct
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              : '#/components/schemas/ProductUpdateRequest'
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/ProductResponse'
+
+    delete:
+      summary: Xoa san pham
+      operationId: deleteProduct
+      tags:
+        - Products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Xoa thanh cong
+
+  /orders:
+    get:
+      summary: Tra cuu danh sach don hang (Admin Dashboard & Storefront)
+      operationId: getOrders
+      tags:
+        - Orders
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [PENDING, PAID, SHIPPED, CANCELLED]
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/OrderPageResponse'
+
+    post:
+      summary: Dat hang (Checkout process)
+      operationId: createOrder
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              : '#/components/schemas/OrderCreateRequest'
+      responses:
+        '201':
+          description: Tao don hang thanh cong
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/OrderResponse'
+        '422':
+          description: Vi pham validation hoac het hang trong kho
+
+  /orders/{id}:
+    get:
+      summary: Chi tiet don hang
+      operationId: getOrderById
+      tags:
+        - Orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/OrderResponse'
+
+  /orders/{id}/status:
+    patch:
+      summary: Cap nhat trang thai don hang (Admin Dashboard)
+      operationId: updateOrderStatus
+      tags:
+        - Orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, PAID, SHIPPED, CANCELLED]
+      responses:
+        '200':
+          description: Thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/OrderResponse'
+
+  /orders/{id}/cancel:
+    post:
+      summary: Huy don hang va hoan ton kho tu dong
+      operationId: cancelOrder
+      tags:
+        - Orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Huy don hang va hoan ton kho thanh cong
+          content:
+            application/json:
+              schema:
+                : '#/components/schemas/OrderResponse'
+
+components:
+  schemas:
+    CategoryResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+
+    CategoryCreateRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    CustomerCreateRequest:
+      type: object
+      required:
+        - fullName
+        - email
+        - phone
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+
+    CustomerUpdateRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+
+    CustomerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fullName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CustomerPageResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            : '#/components/schemas/CustomerResponse'
+        pagination:
+          : '#/components/schemas/PaginationMetadata'
+
+    ProductCreateRequest:
+      type: object
+      required:
+        - name
+        - price
+        - quantity
+        - categoryId
+      properties:
+        name:
+          type: string
+        categoryId:
+          type: string
+          format: uuid
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+
+    ProductUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        categoryId:
+          type: string
+          format: uuid
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          : '#/components/schemas/CategoryResponse'
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    ProductPageResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            : '#/components/schemas/ProductResponse'
+        pagination:
+          : '#/components/schemas/PaginationMetadata'
+
+    OrderItemRequest:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quantity:
+          type: integer
+
+    OrderCreateRequest:
+      type: object
+      required:
+        - customerId
+        - items
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            : '#/components/schemas/OrderItemRequest'
+
+    OrderItemResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+        unitPrice:
+          type: number
+        quantity:
+          type: integer
+        subtotal:
+          type: number
+
+    OrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, PAID, SHIPPED, CANCELLED]
+        totalAmount:
+          type: number
+        items:
+          type: array
+          items:
+            : '#/components/schemas/OrderItemResponse'
+        createdAt:
+          type: string
+          format: date-time
+
+    OrderPageResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            : '#/components/schemas/OrderResponse'
+        pagination:
+          : '#/components/schemas/PaginationMetadata'
+
+    OrderListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            : '#/components/schemas/OrderResponse'
+
+    PaginationMetadata:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
